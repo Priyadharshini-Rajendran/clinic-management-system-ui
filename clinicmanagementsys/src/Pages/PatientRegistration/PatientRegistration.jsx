@@ -1,6 +1,6 @@
 import React from 'react';
 import './PatientRegistration.css';
-import GetComponents from '../../Components/CommonFunctions';
+import GetComponents from '../../Components/CommonComponent';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import { Button } from '@mui/material';

@@ -3,8 +3,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import './UserMaintenance.css';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import { IconButton, Paper, Dialog, DialogTitle, DialogContent, InputLabel, Grid, DialogActions, Button } from '@mui/material';
-import GetComponents from '../../Components/CommonFunctions';
+import { IconButton, Dialog, DialogTitle, DialogContent, InputLabel, Grid, DialogActions, Button, Tooltip } from '@mui/material';
+import GetComponents from '../../Components/CommonComponent';
 const rowList = [
   {
     id: 1,
@@ -154,16 +154,21 @@ const UserMaintenance = () => {
       type: 'actions',
       getActions: (details) => {
         return [
-          <IconButton onClick={() => handleEdit(details)}>
-            <EditIcon />
-          </IconButton>,
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>,
+          <Tooltip title="Edit User">
+            <IconButton onClick={() => handleEdit(details)}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title="Delete User">
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>,
         ];
       },
     },
   ];
+
   const [selectedUserDetail, updateUserDetail] = useState({});
   const [isModalOpen, toggleModalOpen] = useState(false);
   const handleEdit = ({ row }) => {
@@ -172,15 +177,19 @@ const UserMaintenance = () => {
     toggleModalOpen(true);
   };
   const handleDelete = () => {};
+
   const handleClose = () => {
     toggleModalOpen(false);
   };
+
   const handleOnchange = (event) => {
     console.log('event', typeof event);
   };
+
   const handleSave = () => {
     toggleModalOpen(false);
   };
+
   const handleCancel = () => {
     updateUserDetail({});
     toggleModalOpen(false);
