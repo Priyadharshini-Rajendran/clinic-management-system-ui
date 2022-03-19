@@ -138,7 +138,7 @@ const fieldDetails = [
 ];
 const UserMaintenance = () => {
   const columns = [
-    { field: 'id', headerName: 'User Id', width: '200' },
+    { field: 'id', headerName: 'User Id', width: '100' },
     { field: 'firstName', headerName: 'First Name', width: '200' },
     { field: 'lastName', headerName: 'Last Name', width: '200' },
     { field: 'age', headerName: 'Age', width: '80' },
@@ -197,6 +197,7 @@ const UserMaintenance = () => {
 
   return (
     <div className="UserMaintenance-root">
+      <p className="page-heading">Patient List</p>
       <DataGrid rows={rowList} columns={columns} />
       <Dialog onClose={handleClose} open={isModalOpen} maxWidth="md" fullWidth>
         <DialogTitle>Set backup account</DialogTitle>
@@ -231,15 +232,6 @@ const UserMaintenance = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
-  );
-};
-
-const FieldWithLabel = ({ heading, Component }) => {
-  return (
-    <div>
-      <p>{heading}</p>
-      {Component}
     </div>
   );
 };

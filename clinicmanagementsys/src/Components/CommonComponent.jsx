@@ -4,7 +4,7 @@ import Select from '@mui/material/Select';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
-const GetComponents = ({ type, defaultValue, value, onChange = () => {}, onClick = () => {}, label, name, options = [] }) => {
+const GetComponents = ({ type, defaultValue, value, onChange = () => {}, onClick = () => {}, label, name, options = [], disablePast = false }) => {
   switch (type) {
     case 'text':
       return <TextField placeholder={label} id={name} value={value} onChange={onChange} fullWidth />;
@@ -38,13 +38,13 @@ const GetComponents = ({ type, defaultValue, value, onChange = () => {}, onClick
         <LocalizationProvider dateAdapter={AdapterMoment}>
           <DatePicker
             placeholder={label}
-            disableFuture
             id={name}
             openTo="year"
             views={['year', 'month', 'day']}
             value={value}
             onChange={onChange}
             renderInput={(params) => <TextField {...params} fullWidth />}
+            disablePast={disablePast}
           />
         </LocalizationProvider>
       );

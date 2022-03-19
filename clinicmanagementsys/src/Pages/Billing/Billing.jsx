@@ -1,14 +1,14 @@
 import { Paper, Grid, Stack, Divider, TextField, Button } from '@mui/material';
 import React from 'react';
-import './DoctorHomePage.css';
+import './Billing.css';
 import Avatar from '@mui/material/Avatar';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import OppositeContentTimeline from '../../Components/Timeline';
-const DoctorHomePage = () => {
+const Billing = () => {
   return (
     <div className="doctorHomePage-appointment-root">
-      <p className="page-heading">Doctor Home</p>
+      <p className="page-heading">Billing</p>
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <div style={{ overflowY: 'scroll', maxHeight: '78vh', paddingRight: '5px' }}>
@@ -69,23 +69,12 @@ const DoctorHomePage = () => {
               <Divider />
             </Grid>
             <Grid item xs={12}>
-              <b>Visit history</b>
-              <ul>
-                <li>csdc</li>
-                <li>csdc</li>
-                <li>csdc</li>
-                <li>csdc</li>
-              </ul>
-              {/* <OppositeContentTimeline /> */}
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField multiline minRows={5} fullWidth placeholder="Enter diagnosis" />
+              <TextField fullWidth placeholder="Enter amount" type="number" />
             </Grid>
             <Grid item xs={12}>
               <center>
                 <Button variant="outlined">Cancel</Button>&nbsp;
-                <Button variant="contained">Save & Close Appointment</Button>
+                <Button variant="contained">Pay</Button>
               </center>
             </Grid>
           </Grid>
@@ -122,4 +111,4 @@ const getColor = (value) => {
   }
 };
 
-export default DoctorHomePage;
+export default Billing;

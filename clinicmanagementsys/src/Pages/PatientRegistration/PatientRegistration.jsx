@@ -83,6 +83,8 @@ const fieldDetails = [
 const PatientRegistration = () => {
   return (
     <div className="PatientRegistration-root">
+      <p className="page-heading">Patient Registration</p>
+
       <Grid container spacing={2}>
         {fieldDetails.map((fieldDetail, index) => {
           return (
