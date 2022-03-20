@@ -1,0 +1,24 @@
+.login-root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  /* background-color: #f1f1f1; */
+  background-image: url(../../../public/background-image.jpeg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.login-paper-root {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-width: 50vh;
+  border-radius: 10px !important;
+}
+.login-heading {
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  color: #265b7e;
+  margin: 5px auto;
+}

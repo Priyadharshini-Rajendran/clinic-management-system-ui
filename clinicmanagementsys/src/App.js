@@ -11,12 +11,13 @@ import { Paper } from '@mui/material';
 function App(props) {
   return (
     <div className="App">
-      <CustomAppBar />
-      {/* <Toolbar /> */}
+      <Routes>
+        <Route exact path="/" element={<Login />} />
+      </Routes>
+      {/* <CustomAppBar />
       <main className="app-main ">
-        <Paper elevation={2} style={{ padding: '0 20px' }}>
+        <Paper elevation={2} style={{ padding: '0 20px', borderRadius: '10px', minHeight: '80%' }}>
           <Routes>
-            <Route exact path="/" element={<Login />} />
             <Route path="/registration" element={<PatientRegistration />} />
             <Route path="/usermaintenance" element={<UserMaintenance />} />
             <Route path="/doctorhome" element={<DoctorHomePage />} />
@@ -24,7 +25,7 @@ function App(props) {
             <Route path="/billing" element={<Billing />} />
           </Routes>
         </Paper>
-      </main>
+      </main> */}
     </div>
   );
 }
