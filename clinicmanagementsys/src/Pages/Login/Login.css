@@ -4,7 +4,7 @@
   justify-content: center;
   height: 100vh;
   /* background-color: #f1f1f1; */
-  background-image: url(../../../public/background-image.jpeg);
+  background-image: url(../../../public/common-background.jpeg);
   background-repeat: no-repeat;
   background-size: cover;
 }

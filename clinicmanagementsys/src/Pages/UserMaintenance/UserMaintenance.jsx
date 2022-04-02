@@ -1,67 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import './UserMaintenance.css';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { IconButton, Dialog, DialogTitle, DialogContent, InputLabel, Grid, DialogActions, Button, Tooltip } from '@mui/material';
 import GetComponents from '../../Components/CommonComponent';
-const rowList = [
-  {
-    id: 1,
-    lastName: 'Snow',
-    firstName: 'Jon',
-    gender: 1,
-    age: 20,
-    dob: '02-09-2001',
-    mobileNumber: 9090909090,
-    mailId: 'abc@gmail.com',
-    address: 'Coimbatore',
-  },
-  {
-    id: 2,
-    lastName: 'Lannister',
-    firstName: 'Cersei',
-    gender: 1,
-    age: 20,
-    dob: '02-09-2001',
-    mobileNumber: 9090909090,
-    mailId: 'abc@gmail.com',
-    address: 'Coimbatore',
-  },
-  {
-    id: 3,
-    lastName: 'Lannister',
-    firstName: 'Jaime',
-    gender: 1,
-    age: 20,
-    dob: '02-09-2001',
-    mobileNumber: 9090909090,
-    mailId: 'abc@gmail.com',
-    address: 'Coimbatore',
-  },
-  {
-    id: 4,
-    lastName: 'Stark',
-    firstName: 'Arya',
-    gender: 1,
-    age: 20,
-    dob: '02-09-2001',
-    mobileNumber: 9090909090,
-    mailId: 'abc@gmail.com',
-    address: 'Coimbatore',
-  },
-  {
-    id: 5,
-    lastName: 'Targaryen',
-    firstName: 'Daenerys',
-    gender: 1,
-    age: 20,
-    dob: '02-09-2001',
-    mobileNumber: 9090909090,
-    mailId: 'abc@gmail.com',
-    address: 'Coimbatore',
-  },
-];
+import { getAllUser, editUser } from '../../APICalls/APICall';
+import moment from 'moment';
 const fieldDetails = [
   {
     label: 'First Name',
@@ -137,6 +82,16 @@ const fieldDetails = [
   },
 ];
 const UserMaintenance = () => {
+  const [userList, updateUserList] = useState([]);
+  useEffect(() => {
+    getAllUser().then((resp) => {
+      updateUserList(
+        resp.map((ele, index) => {
+          return { ...ele, id: index + 1 };
+        })
+      );
+    });
+  }, []);
   const columns = [
     { field: 'id', headerName: 'User Id', width: '100' },
     { field: 'firstName', headerName: 'First Name', width: '200' },
@@ -159,11 +114,6 @@ const UserMaintenance = () => {
               <EditIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title="Delete User">
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>,
         ];
       },
     },
@@ -176,17 +126,32 @@ const UserMaintenance = () => {
     updateUserDetail(row);
     toggleModalOpen(true);
   };
-  const handleDelete = () => {};
 
   const handleClose = () => {
+    updateUserDetail({});
     toggleModalOpen(false);
   };
 
   const handleOnchange = (event) => {
     console.log('event', typeof event);
+    if (!event.target) {
+      updateUserDetail({ ...selectedUserDetail, dob: event });
+    } else {
+      updateUserDetail({ ...selectedUserDetail, [event.target.id]: event.target.value });
+    }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    await editUser(selectedUserDetail?.userId, { ...selectedUserDetail, dob: moment(selectedUserDetail.dob).format('DD-MM-YYYY') });
+    await getAllUser().then((resp) => {
+      updateUserList(
+        resp.map((ele, index) => {
+          return { ...ele, id: index + 1 };
+        })
+      );
+      return;
+    });
+    updateUserDetail({});
     toggleModalOpen(false);
   };
 
@@ -198,7 +163,7 @@ const UserMaintenance = () => {
   return (
     <div className="UserMaintenance-root">
       <p className="page-heading">Patient List</p>
-      <DataGrid rows={rowList} columns={columns} />
+      <DataGrid rows={userList} columns={columns} />
       <Dialog onClose={handleClose} open={isModalOpen} maxWidth="md" fullWidth>
         <DialogTitle>Set backup account</DialogTitle>
         <DialogContent>
@@ -210,7 +175,11 @@ const UserMaintenance = () => {
                     {fieldDetail?.label}
                   </InputLabel>
                   <GetComponents
-                    value={selectedUserDetail[fieldDetail?.name]}
+                    value={
+                      fieldDetail?.type === 'date'
+                        ? moment(selectedUserDetail[fieldDetail?.name], 'DD-MM-YYYY')
+                        : selectedUserDetail[fieldDetail?.name]
+                    }
                     type={fieldDetail?.type}
                     label={fieldDetail?.label}
                     name={fieldDetail?.name}

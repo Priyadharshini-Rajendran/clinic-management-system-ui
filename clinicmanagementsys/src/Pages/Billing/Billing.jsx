@@ -1,32 +1,63 @@
 import { Paper, Grid, Stack, Divider, TextField, Button } from '@mui/material';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Billing.css';
 import Avatar from '@mui/material/Avatar';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import OppositeContentTimeline from '../../Components/Timeline';
+import { getAllAppointment, updateAppointment } from '../../APICalls/APICall';
 const Billing = () => {
+  const [appointmentList, updateAppointmentList] = useState([]);
+  const [selectedAppointment, updateSelectedAppointment] = useState({});
+  useEffect(() => {
+    refresh();
+  }, []);
+  const refresh = () => {
+    getAllAppointment().then((resp) => {
+      updateSelectedAppointment(resp?.length > 0 ? resp[0] : {});
+      updateAppointmentList(resp);
+    });
+  };
+  const handlePay = async () => {
+    await updateAppointment(selectedAppointment?._id, { ...selectedAppointment, isPaymentDone: true });
+    refresh();
+  };
+  const handleCancel = () => {
+    refresh();
+  };
   return (
     <div className="doctorHomePage-appointment-root">
       <p className="page-heading">Billing</p>
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <div style={{ overflowY: 'scroll', maxHeight: '78vh', paddingRight: '5px' }}>
-            {[1, 2, 3, 4, 5, 1, 2, 3, 4, 5].map(() => {
-              const randomNumber = Math.floor(Math.random() * 10 + 1);
+            {appointmentList.map((ele, index) => {
+              const randomNumber = index % 10;
               return (
-                <Paper elevation={1} className="doctorHomePage-appointment-list-root" style={{ borderColor: getColor(randomNumber) }}>
+                <Paper
+                  elevation={1}
+                  className="doctorHomePage-appointment-list-root"
+                  style={{ borderColor: getColor(randomNumber), background: ele?._id === selectedAppointment?._id ? '#c2c2c2' : '' }}
+                  onClick={() => {
+                    updateSelectedAppointment(ele);
+                  }}
+                >
                   <Stack direction="row" spacing={2} alignItems="center">
-                    <Avatar style={{ backgroundColor: getColor(randomNumber), color: '#000' }}>PR</Avatar>
+                    <Avatar style={{ backgroundColor: getColor(randomNumber), color: '#000' }}>
+                      {ele?.firstName?.charAt(0)?.toUpperCase()}
+                      {ele?.lastName?.charAt(0)?.toUpperCase()}
+                    </Avatar>
                     <div className="doctorHomePage-appointment-list-details">
-                      <p>Priyadharshini R</p>
+                      <p>
+                        {ele?.firstName} {ele?.lastName}
+                      </p>
                       <p className="doctorHomePage-appointment-list-details-small">
                         <LocalPhoneIcon fontSize="small" />
-                        &nbsp;8940020941
+                        &nbsp;{ele?.mobileNumber}
                       </p>
                       <p className="doctorHomePage-appointment-list-details-small">
                         <AlarmIcon fontSize="small" />
-                        &nbsp;12:30 AM
+                        &nbsp;{ele?.appointmentTime}
                       </p>
                     </div>
                   </Stack>
@@ -39,42 +70,59 @@ const Billing = () => {
           <Grid container spacing={2}>
             <Grid item xs={4}>
               <b>Name</b>
-              <p>Priyadharshini R</p>
+              <p>
+                {selectedAppointment?.firstName}&nbsp;
+                {selectedAppointment?.lastName}
+              </p>
             </Grid>
             <Grid item xs={4}>
               <b>Age</b>
-              <p>80</p>
+              <p>{selectedAppointment?.age}</p>
             </Grid>
             <Grid item xs={4}>
               <b>Date of Birth</b>
-              <p>12-06-1960</p>
+              <p>{selectedAppointment.dob}</p>
             </Grid>
             <Grid item xs={4}>
               <b>Gender</b>
-              <p>Unknown</p>
+              <p>{selectedAppointment?.gender}</p>
             </Grid>
             <Grid item xs={4}>
               <b>Mobile No</b>
-              <p>990909090909</p>
+              <p>{selectedAppointment?.mobileNumber}</p>
             </Grid>
             <Grid item xs={4}>
               <b>Mail Id</b>
-              <p>alien@space.com</p>
+              <p>{selectedAppointment?.mailId}</p>
             </Grid>
             <Grid item xs={12}>
               <b>Address</b>
-              <p>Out of galaxy</p>
+              <p>{selectedAppointment?.address}</p>
             </Grid>
             <Grid item xs={12}>
               <Divider />
             </Grid>
             <Grid item xs={12}>
-              <TextField fullWidth placeholder="Enter amount" type="number" />
+              <TextField
+                value={selectedAppointment?.payedAmount || ''}
+                fullWidth
+                disabled={selectedAppointment?.isPaymentDone}
+                placeholder="Enter amount"
+                type="number"
+                onChange={(event) => {
+                  updateSelectedAppointment({ ...selectedAppointment, payedAmount: event.target.value });
+                }}
+              />
             </Grid>
             <Grid item xs={12}>
               <center>
-                <Button variant="outlined">Cancel</Button>&nbsp;
-                <Button variant="contained">Pay</Button>
+                <Button variant="outlined" onClick={handleCancel}>
+                  Cancel
+                </Button>
+                &nbsp;
+                <Button variant="contained" onClick={handlePay} disabled={selectedAppointment?.isPaymentDone}>
+                  Pay
+                </Button>
               </center>
             </Grid>
           </Grid>

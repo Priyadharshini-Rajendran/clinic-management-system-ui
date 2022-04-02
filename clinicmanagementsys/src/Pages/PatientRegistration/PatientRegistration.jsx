@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './PatientRegistration.css';
 import GetComponents from '../../Components/CommonComponent';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import { Button } from '@mui/material';
-
+import { createUser } from '../../APICalls/APICall';
+import moment from 'moment';
 const fieldDetails = [
   {
     label: 'First Name',
@@ -81,6 +82,25 @@ const fieldDetails = [
 ];
 
 const PatientRegistration = () => {
+  const [userDetails, updateUserDetails] = useState({});
+  const onChange = (event) => {
+    if (!event.target) {
+      updateUserDetails({ ...userDetails, dob: event });
+    } else if (!event.target.id) {
+      updateUserDetails({ ...userDetails, [event.target.name]: event.target.value });
+    } else {
+      updateUserDetails({ ...userDetails, [event.target.id]: event.target.value });
+    }
+  };
+  const onClear = () => {
+    updateUserDetails({});
+  };
+  const onSave = async () => {
+    const resp = await createUser({ ...userDetails, dob: moment(userDetails.dob).format('DD-MM-YYYY') });
+    console.log('resp', resp);
+    updateUserDetails({});
+  };
+  console.log('userDetails', userDetails);
   return (
     <div className="PatientRegistration-root">
       <p className="page-heading">Patient Registration</p>
@@ -98,6 +118,9 @@ const PatientRegistration = () => {
                 name={fieldDetail?.name}
                 options={fieldDetail?.option}
                 defaultValue={fieldDetail?.defaultValue}
+                onChange={onChange}
+                disableFuture
+                value={userDetails[fieldDetail?.name] || undefined}
               />
             </Grid>
           );
@@ -105,9 +128,13 @@ const PatientRegistration = () => {
       </Grid>
       <br />
       <center>
-        <Button variant="outlined">Clear</Button>
+        <Button variant="outlined" onClick={onClear}>
+          Clear
+        </Button>
         &nbsp;
-        <Button variant="contained">Save</Button>
+        <Button variant="contained" onClick={onSave}>
+          Save
+        </Button>
       </center>
     </div>
   );
