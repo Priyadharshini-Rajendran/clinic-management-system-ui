@@ -11,12 +11,16 @@ const Login = (props) => {
   const handleLogin = async () => {
     if (userName.includes('PAT')) {
       const userDetail = await getUser(userName);
-      sessionStorage.setItem('userDetail', JSON.stringify(userDetail));
-      history('/clinic');
+      if (userDetail && userDetail !== null && Object.keys(userDetail) > 0) {
+        sessionStorage.setItem('userDetail', JSON.stringify(userDetail));
+        history('/clinic');
+      }
     } else {
       const selectedUsers = users.filter((ele) => ele.id === userName);
-      sessionStorage.setItem('userDetail', JSON.stringify(selectedUsers?.[0]));
-      history('/clinic');
+      if (selectedUsers.length > 0) {
+        sessionStorage.setItem('userDetail', JSON.stringify(selectedUsers?.[0]));
+        history('/clinic');
+      }
     }
   };
   return (
